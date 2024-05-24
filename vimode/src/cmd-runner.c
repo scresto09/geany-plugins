@@ -704,9 +704,12 @@ static gboolean process_cmd(CmdDef *cmds, CmdContext *ctx, gboolean ins_mode)
 	{
 		if (orig_mode == VI_MODE_COMMAND_SINGLE)
 			vi_set_mode(VI_MODE_INSERT);
+		ensure_current_line_expanded(ctx->sci);
 	}
 	else if (!consumed && ctx->kpl)
 	{
+		/* cppcheck-suppress deallocuse symbolName=kpl
+		 * Not sure how cppcheck gets this wrong here, but all seem OK */
 		g_free(ctx->kpl->data);
 		ctx->kpl = g_slist_delete_link(ctx->kpl, ctx->kpl);
 	}

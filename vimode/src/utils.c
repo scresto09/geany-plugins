@@ -210,6 +210,7 @@ gint get_line_number_rel(ScintillaObject *sci, gint shift)
 	return new_line;
 }
 
+
 void goto_nonempty(ScintillaObject *sci, gint line, gboolean scroll)
 {
 	gint line_end_pos = SSM(sci, SCI_GETLINEENDPOSITION, line, 0);
@@ -218,4 +219,12 @@ void goto_nonempty(ScintillaObject *sci, gint line, gboolean scroll)
 	while (g_ascii_isspace(SSM(sci, SCI_GETCHARAT, pos, 0)) && pos < line_end_pos)
 		pos = NEXT(sci, pos);
 	SET_POS(sci, pos, scroll);
+}
+
+
+void ensure_current_line_expanded(ScintillaObject *sci)
+{
+	gint line = GET_CUR_LINE(sci);
+	if (!SSM(sci, SCI_GETLINEVISIBLE, line, 0))
+		SSM(sci, SCI_ENSUREVISIBLE, line, 0);
 }
